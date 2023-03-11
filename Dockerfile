@@ -47,7 +47,7 @@ RUN echo "type = dropbox" >> /home/foundry/rclone.conf
 RUN echo "token = ${DROPBOX_TOKEN}" >> /home/foundry/rclone.conf
 RUN rclone sync dbx:/Shares/foundry/data ${FOUNDRY_DATA_DIR} --config=/home/foundry/rclone.conf --verbose
 
-# Set up backups
+# Set up backup
 COPY rclone-data.sh /home/foundry/rclone-data.sh
 RUN chmod +x /home/foundry/rclone-data.sh
 RUN rm /home/foundry/data/bkp.log
