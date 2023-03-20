@@ -45,7 +45,7 @@ RUN unzip -q data.zip
 RUN echo "[dbx]" > /home/foundry/rclone.conf
 RUN echo "type = dropbox" >> /home/foundry/rclone.conf
 RUN echo "token = ${DROPBOX_TOKEN}" >> /home/foundry/rclone.conf
-RUN rclone sync dbx:/Shares/foundry/data ${FOUNDRY_DATA_DIR} --config=/home/foundry/rclone.conf --verbose
+RUN rclone sync dbx:/Shares/foundry/data ${FOUNDRY_DATA_DIR} --config=/home/foundry/rclone.conf
 
 # Set up backup
 COPY rclone-data.sh /home/foundry/rclone-data.sh
