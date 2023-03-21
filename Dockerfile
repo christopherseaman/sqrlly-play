@@ -50,6 +50,7 @@ RUN rclone sync dbx:/Shares/foundry/data ${FOUNDRY_DATA_DIR} --config=/home/foun
 # Set up backup
 COPY rclone-data.sh /home/foundry/rclone-data.sh
 RUN chmod +x /home/foundry/rclone-data.sh
+RUN touch /home/foundry/data/bkp.log
 RUN rm /home/foundry/data/bkp.log
 RUN echo "${CRON_CMD}" >> /var/spool/cron/crontabs/root
 RUN cat /var/spool/cron/crontabs/root
