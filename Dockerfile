@@ -23,7 +23,6 @@ ENV GUID=1000
 # Add some packages for pulling the foundry software and backing up
 RUN apk update
 RUN apk add --no-cache curl fuse rclone openssl npm
-RUN deluser node
 RUN npm i pm2 -g
 
 # Set up directories
