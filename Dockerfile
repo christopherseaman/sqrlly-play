@@ -16,7 +16,6 @@ ENV FOUNDRY_APP_DIR=/home/foundry/app
 
 # This is where persistence data is stored (make it a volume)
 ENV FOUNDRY_DATA_DIR=/home/foundry/data
-
 ENV UID=1000
 ENV GUID=1000
 
