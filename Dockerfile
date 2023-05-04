@@ -9,9 +9,7 @@ ARG FOUNDRY_DATA_URL
 
 # From rclone dropbox setups
 ARG DROPBOX_TOKEN
-
 # ARG PORT ## 30000
-
 ENV FOUNDRY_APP_DIR=/home/foundry/app
 
 # This is where persistence data is stored (make it a volume)
