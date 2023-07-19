@@ -46,12 +46,12 @@ RUN echo "token = ${DROPBOX_TOKEN}" >> /home/foundry/rclone.conf
 RUN rclone sync dbx:/Shares/foundry/data ${FOUNDRY_VTT_DATA_PATH} --config=/home/foundry/rclone.conf
 
 # Set up backup
-COPY rclone-data.sh /home/foundry/rclone-data.sh
-RUN chmod +x /home/foundry/rclone-data.sh
+COPY rclone-data.sh ${FOUNDRY_BASE}/rclone-data.sh
+RUN chmod +x ${FOUNDRY_BASE}/rclone-data.sh
 COPY start-foundry.sh ${FOUNDRY_BASE}/start-foundry.sh
 RUN chmod +x ${FOUNDRY_BASE}/start-foundry.sh
-RUN touch /home/foundry/data/bkp.log
-RUN rm /home/foundry/data/bkp.log
+RUN rm ${FOUNDRY_VTT_DATA_PATH}/bkp.log
+RUN touch ${FOUNDRY_VTT_DATA_PATH}/bkp.log
 RUN echo "${CRON_CMD}" >> /var/spool/cron/crontabs/root
 RUN cat /var/spool/cron/crontabs/root
 

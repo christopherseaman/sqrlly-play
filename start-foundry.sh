@@ -9,6 +9,6 @@ jq '.sslCert = env.FOUNDRY_SSL_CERT |
 
 pm2 start ${FOUNDRY_MAIN} --name "sqrlly-play"
 
-pm2 start ${FOUNDRY_VTT_DATA_PATH}/rclone-data.sh -c '0 * * * *' --no-autorestart --name ${FOUNDRY_VTT_DATA_PATH}/sqrlly-backup
+pm2 start ${FOUNDRY_BASE}/rclone-data.sh -c '0 * * * *' --no-autorestart --name sqrlly-backup
 
 pm2 logs
