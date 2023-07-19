@@ -21,7 +21,7 @@ ENV GUID=1000
 
 # Add some packages for pulling the foundry software and backing up
 RUN apk update
-RUN apk add --no-cache curl fuse rclone openssl npm jq
+RUN apk add --no-cache curl fuse rclone openssl npm jq bash
 RUN npm i pm2 -g
 
 # Set up directories
@@ -65,4 +65,4 @@ RUN echo "export FOUNDRY_HOSTNAME=${FOUNDRY_HOSTNAME}" >> ${FOUNDRY_BASE}/dot.en
 # the Foundry VTT node application round on port 30000 by default
 EXPOSE 30000
 
-CMD sh ${FOUNDRY_BASE}/start-foundry.sh
+CMD bash ${FOUNDRY_BASE}/start-foundry.sh
