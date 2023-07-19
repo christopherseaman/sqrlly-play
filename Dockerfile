@@ -66,4 +66,4 @@ RUN echo "export FOUNDRY_HOSTNAME=${FOUNDRY_HOSTNAME}" >> ${FOUNDRY_BASE}/dot.en
 EXPOSE 30000
 
 WORKDIR ${FOUNDRY_BASE}
-CMD ./start-foundry.sh
+CMD sh ./start-foundry.sh
