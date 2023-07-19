@@ -64,5 +64,6 @@ RUN echo "export FOUNDRY_HOSTNAME=${FOUNDRY_HOSTNAME}" >> ${FOUNDRY_BASE}/dot.en
 
 # the Foundry VTT node application round on port 30000 by default
 EXPOSE 30000
-# CMD crond && pm2-runtime ${FOUNDRY_APP_DIR}/resources/app/main.js -- --headless --dataPath=${FOUNDRY_DATA_DIR}
-CMD ${FOUNDRY_BASE}/start-foundry.sh
+
+CWD ${FOUNDRY_BASE}
+CMD ./start-foundry.sh
