@@ -65,5 +65,4 @@ RUN echo "export FOUNDRY_HOSTNAME=${FOUNDRY_HOSTNAME}" >> ${FOUNDRY_BASE}/dot.en
 # the Foundry VTT node application round on port 30000 by default
 EXPOSE 30000
 
-WORKDIR ${FOUNDRY_BASE}
-CMD sh ./start-foundry.sh
+CMD sh ${FOUNDRY_BASE}/start-foundry.sh
