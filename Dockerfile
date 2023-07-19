@@ -6,6 +6,7 @@ ARG CRON_CMD
 # Shared dbx link ending in ?dl=1
 ARG FOUNDRY_ZIP_URL
 ARG FOUNDRY_DATA_URL
+ARG FOUNDRY_HOSTNAME
 
 # From rclone dropbox setups
 ARG DROPBOX_TOKEN
@@ -56,9 +57,10 @@ RUN cat /var/spool/cron/crontabs/root
 
 # Dump environment for startup script
 RUN touch ${FOUNDRY_BASE}/dot.env
-RUN cat "export FOUNDRY_BASE=${FOUNDRY_BASE}" >> ${FOUNDRY_BASE}/dot.env
-RUN cat "export FOUNDRY_VTT_DATA_PATH=${FOUNDRY_VTT_DATA_PATH}" >> ${FOUNDRY_BASE}/dot.env
-RUN cat "export FOUNDRY_MAIN=${FOUNDRY_BASE}/app/resources/app/main.js" >> ${FOUNDRY_BASE}/dot.env
+RUN echo "export FOUNDRY_BASE=${FOUNDRY_BASE}" >> ${FOUNDRY_BASE}/dot.env
+RUN echo "export FOUNDRY_VTT_DATA_PATH=${FOUNDRY_VTT_DATA_PATH}" >> ${FOUNDRY_BASE}/dot.env
+RUN echo "export FOUNDRY_MAIN=${FOUNDRY_BASE}/app/resources/app/main.js" >> ${FOUNDRY_BASE}/dot.env
+RUN echo "export FOUNDRY_HOSTNAME=${FOUNDRY_HOSTNAME}" >> ${FOUNDRY_BASE}/dot.env
 
 # the Foundry VTT node application round on port 30000 by default
 EXPOSE 30000
