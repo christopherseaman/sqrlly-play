@@ -7,7 +7,8 @@ jq '.sslCert = env.FOUNDRY_SSL_CERT |
    .dataPath = env.FOUNDRY_VTT_DATA_PATH |
    .hostname = env.FOUNDRY_HOSTNAME' ${FOUNDRY_VTT_DATA_PATH}/Config/options.jq.json > ${FOUNDRY_VTT_DATA_PATH}/Config/options.json
 
-pm2 start ${FOUNDRY_MAIN} --name "sqrlly-play"
+# pm2 start ${FOUNDRY_MAIN} --name "sqrlly-play"
 
 pm2 start ${FOUNDRY_VTT_DATA_PATH}/rclone-data.sh -c '0 * * * *' --no-autorestart --name ${FOUNDRY_VTT_DATA_PATH}/sqrlly-backup
 
+node ${FOUNDRY_MAIN}
