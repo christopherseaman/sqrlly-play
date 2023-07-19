@@ -40,10 +40,10 @@ RUN curl -L ${FOUNDRY_DATA_URL} -o data.zip
 RUN unzip -q data.zip
 
 # Configure rclone
-RUN echo "[dbx]" > /home/foundry/rclone.conf
-RUN echo "type = dropbox" >> /home/foundry/rclone.conf
-RUN echo "token = ${DROPBOX_TOKEN}" >> /home/foundry/rclone.conf
-RUN rclone sync dbx:/Shares/foundry/data ${FOUNDRY_VTT_DATA_PATH} --config=/home/foundry/rclone.conf
+RUN echo "[dbx]" > ${FOUNDRY_BASE}/rclone.conf
+RUN echo "type = dropbox" >> ${FOUNDRY_BASE}/rclone.conf
+RUN echo "token = ${DROPBOX_TOKEN}" >> ${FOUNDRY_BASE}/rclone.conf
+RUN rclone sync dbx:/Shares/foundry/data ${FOUNDRY_VTT_DATA_PATH} --config=${FOUNDRY_BASE}/rclone.conf
 
 # Set up backup
 COPY rclone-data.sh ${FOUNDRY_BASE}/rclone-data.sh
