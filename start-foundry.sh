@@ -1,6 +1,10 @@
 #!/bin/bash
 
-source dot.env
+source ${FOUNDRY_BASE}/dot.env
+
+jq '.sslCert = env.FOUNDRY_SSL_CERT |
+     .sslKey = env.FOUNDRY_SSL_KEY  |
+   .dataPath = env.FOUNDRY_VTT_DATA_PATH' Config/options.jq > Config/options.json
 
 pm2 start ${FOUNDRY_MAIN} --name "sqrlly-play"
 
