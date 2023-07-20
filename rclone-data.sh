@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
-source ${FOUNDRY_BASE}/dot.env
+if [ -f .env ]; then
+    source ${FOUNDRY_BASE}/dot.env
+fi
 
 rclone sync ${FOUNDRY_VTT_DATA_PATH} dbx:/Shares/foundry/data \
         --config=${FOUNDRY_BASE}/rclone.conf \

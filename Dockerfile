@@ -25,7 +25,6 @@ ENV GUID=1000
 
 # Set up directories
 WORKDIR ${FOUNDRY_BASE}
-COPY dot.env ${FOUNDRY_BASE}/dot.env
 RUN mkdir -p ${FOUNDRY_BASE}/app
 RUN mkdir -p ${FOUNDRY_VTT_DATA_PATH}
 

@@ -1,6 +1,8 @@
 #!/bin/bash
 
-source ${FOUNDRY_BASE}/dot.env
+if [ -f .env ]; then
+    source ${FOUNDRY_BASE}/dot.env
+fi
 
 # Configure rclone
 echo "Configuring rclone..."
