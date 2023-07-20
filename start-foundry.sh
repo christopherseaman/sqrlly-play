@@ -1,14 +1,14 @@
 #!/bin/bash
 
-if [ -f .env ]; then
-    source ${FOUNDRY_BASE}/dot.env
+if [ -f ${FOUNDRY_BASE}/dot.env ]; then
+    export $(cat dot.env | grep -v "#" | xargs)
 fi
 
 # Configure rclone
 echo "Configuring rclone..."
 echo "[dbx]" > ${FOUNDRY_BASE}/rclone.conf
 echo "type = dropbox" >> ${FOUNDRY_BASE}/rclone.conf
-echo "token = ${DROPBOX_TOKEN}" >> ${FOUNDRY_BASE}/rclone.conf
+echo "token = '${DROPBOX_TOKEN}'" >> ${FOUNDRY_BASE}/rclone.conf
 
 # Clear backup log if it exists
 if [ -f ${FOUNDRY_VTT_DATA_PATH}/bkp.log ]; then
@@ -28,6 +28,10 @@ then
   echo "Data snapshot fetched successfully."
 else
   echo "Data snapshot fetch failed."
+  echo "rclone config:"
+  cat ${FOUNDRY_BASE}/rclone.conf
+  echo "Backup log:"
+  cat ${FOUNDRY_VTT_DATA_PATH}/bkp.log
   exit 1
 fi
 

@@ -2,6 +2,9 @@
 
 set -euo pipefail
 
+# Set the default values for the environment variables
+NOPUSH=${NOPUSH:-""}
+
 # If ./buildpush.sh --NOPUSH, don't push the image to the registry
 while [[ $# -gt 0 ]]; do
     case "$1" in
@@ -23,38 +26,28 @@ while [[ $# -gt 0 ]]; do
 done
 
 # Set the environment variables from the dot.env file
-if [ -e dot.env ]
-then
-    source dot.env
-    echo "Environment set"
-else
-    echo "Environment file not found"
-    exit 1
+if [ -f ${FOUNDRY_BASE}/dot.env ]; then
+    export $(cat dot.env | grep -v "#" | xargs)
 fi
+
+# Set up build args
+build_args=()
+while IFS= read -r line; do
+    # Skip empty lines
+    if [ -z "$line" ]; then
+        continue
+    fi
+
+    build_args+=("--build-arg $line")
+done < <(grep -vE '^#|^$' dot.env)
 
 # Set the timestamp for the build in seconds since the epoch
 TIMESTAMP=$(date +%s)
 HUB_REPO=${HUB_REPO}
 
-# Helper function to expand nested variables and remove single quotes if any
-expand_var() {
-    local IFS=' '
-    local var_value="${*#*=}"
-    printf '%s=%s' "${*%%=*}" "${var_value//\'/}"
-}
-
-# Set up build args
-build_args=()
-while IFS= read -r line; do
-    eval_line=$(expand_var "$line")
-    build_args+=("--build-arg \"$eval_line\"")
-done < <(grep -vE '^#|^$' dot.env)
-
 # Construct the Docker build command with build_args
 docker_build_cmd=("docker build . -t ${HUB_REPO}:${TIMESTAMP}")
-for arg in "${build_args[@]}"; do
-    docker_build_cmd+=("$arg")
-done
+docker_build_cmd+=("${build_args[@]}")
 
 # Announce the build command
 echo "Running Docker build command:"
