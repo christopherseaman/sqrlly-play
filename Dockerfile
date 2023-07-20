@@ -2,29 +2,36 @@ FROM node:16-alpine
 
 # Set some build args
 ARG CRON_CMD 
-ARG DROPBOX_TOKEN
 ARG FOUNDRY_ZIP_URL
 ARG FOUNDRY_DATA_URL
 ARG FOUNDRY_BASE
 ARG FOUNDRY_MAIN
 ARG FOUNDRY_VTT_DATA_PATH
+ARG DROPBOX_TOKEN
 ARG FOUNDRY_HOSTNAME
 ARG PORT
+ENV CRON_CMD=${CRON_CMD}
+ENV FOUNDRY_ZIP_URL=${FOUNDRY_ZIP_URL}
+ENV FOUNDRY_DATA_URL=${FOUNDRY_DATA_URL}
+ENV FOUNDRY_BASE=${FOUNDRY_BASE}
+ENV FOUNDRY_MAIN=${FOUNDRY_MAIN}
+ENV FOUNDRY_VTT_DATA_PATH=${FOUNDRY_VTT_DATA_PATH}
+ENV DROPBOX_TOKEN=${DROPBOX_TOKEN}
+ENV FOUNDRY_HOSTNAME=${FOUNDRY_HOSTNAME}
+ENV PORT=${PORT}
 
-# This is where persistence data is stored (make it a volume)
-ENV FOUNDRY_VTT_DATA_PATH=/home/foundry/data
-ENV FOUNDRY_MAIN=${FOUNDRY_BASE}/app/resources/app/main.js
 ENV UID=1000
 ENV GUID=1000
+
+# Set up directories
+COPY dot.env ${FOUNDRY_BASE}/dot.env
+RUN mkdir -p ${FOUNDRY_BASE}/app
+RUN mkdir -p ${FOUNDRY_VTT_DATA_PATH}
 
 # Add some packages for pulling the foundry software and backing up
 RUN apk update
 RUN apk add --no-cache curl fuse rclone openssl npm jq bash
 RUN npm i pm2 -g
-
-# Set up directories
-RUN mkdir -p ${FOUNDRY_BASE}/app
-RUN mkdir -p ${FOUNDRY_VTT_DATA_PATH}
 
 # Fetch and extract application
 WORKDIR ${FOUNDRY_BASE}/app
@@ -49,4 +56,4 @@ RUN cat /var/spool/cron/crontabs/root
 # the Foundry VTT node application round on port 30000 by default
 EXPOSE 30000
 
-CMD bash ${FOUNDRY_BASE}/start-foundry.sh
+CMD ${FOUNDRY_BASE}/start-foundry.sh
