@@ -3,11 +3,24 @@
 set -euo pipefail
 
 # If ./buildpush.sh --NOPUSH, don't push the image to the registry
-if [ "$1" = "--NOPUSH" ]
-then
-    echo "NOPUSH set, not pushing images to registry"
-    export NOPUSH=1
-fi
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --NOPUSH)
+            echo "NOPUSH set, not pushing images to the registry"
+            export NOPUSH=1
+            shift
+            ;;
+        --RUN)
+            echo "RUN set, running the image after successful build"
+            export RUN=1
+            shift
+            ;;
+        *)
+            echo "Unknown option: $1"
+            exit 1
+            ;;
+    esac
+done
 
 # Set the environment variables from the dot.env file
 if [ -e dot.env ]
@@ -58,14 +71,18 @@ if eval "${docker_build_cmd[@]}"
 then
     echo "Build succeeded!"
     docker tag "${HUB_REPO}:${TIMESTAMP}" "${HUB_REPO}:latest"
-    # if NOPUSH is set, don't push the latest tag
+
+    # Push the image to the registry unless NOPUSH is set
     if [ -z "${NOPUSH}" ]
     then
         docker push "${HUB_REPO}:latest"
         docker push "${HUB_REPO}:${TIMESTAMP}"
         echo "Pushed ${HUB_REPO}:${TIMESTAMP}, :latest"
-    else
-        exit 0
+    # Run the image if RUN is set
+    elif [ -n "${RUN}" ]
+    then
+        echo "RUN set, running the image"
+        docker run -p 30000:30000 "${HUB_REPO}:${TIMESTAMP}"
     fi
 else
     echo "Build failed!"
