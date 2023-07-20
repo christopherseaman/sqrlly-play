@@ -8,7 +8,9 @@ fi
 echo "Configuring rclone..."
 echo "[dbx]" > ${FOUNDRY_BASE}/rclone.conf
 echo "type = dropbox" >> ${FOUNDRY_BASE}/rclone.conf
-echo "token = '${DROPBOX_TOKEN}'" >> ${FOUNDRY_BASE}/rclone.conf
+echo "token = ${DROPBOX_TOKEN}" >> ${FOUNDRY_BASE}/rclone.conf
+echo "rclone config:"
+cat ${FOUNDRY_BASE}/rclone.conf
 
 # Clear backup log if it exists
 if [ -f ${FOUNDRY_VTT_DATA_PATH}/bkp.log ]; then
