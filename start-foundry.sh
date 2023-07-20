@@ -4,9 +4,7 @@ source ${FOUNDRY_BASE}/dot.env
 
 # Fetch data snapshot
 curl -L ${FOUNDRY_DATA_URL} -o ${FOUNDRY_BASE}/data.zip
-unzip -q ${FOUNDRY_BASE}/data.zip
-ls ${FOUNDRY_VTT_DATA_PATH}
-exit 1
+unzip -q ${FOUNDRY_BASE}/data.zip -d ${FOUNDRY_BASE}
 rclone sync dbx:/Shares/foundry/data ${FOUNDRY_VTT_DATA_PATH} --config=${FOUNDRY_BASE}/rclone.conf
 rm ${FOUNDRY_VTT_DATA_PATH}/bkp.log
 touch ${FOUNDRY_VTT_DATA_PATH}/bkp.log
