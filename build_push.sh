@@ -26,20 +26,18 @@ while [[ $# -gt 0 ]]; do
 done
 
 # Set the environment variables from the dot.env file
-if [ -f ${FOUNDRY_BASE}/dot.env ]; then
-    export $(cat dot.env | grep -v "#" | xargs)
-fi
-
-# Set up build args
 build_args=()
-while IFS= read -r line; do
-    # Skip empty lines
-    if [ -z "$line" ]; then
-        continue
-    fi
+if [ -f dot.env ]; then
+    while IFS= read -r line; do
+        # Skip empty lines
+        if [ -z "$line" ]; then
+            continue
+        fi
 
-    build_args+=("--build-arg $line")
-done < <(grep -vE '^#|^$' dot.env)
+        export "$line"
+        build_args+=("--build-arg $line")
+    done < <(grep -vE '^#|^$' dot.env)
+fi
 
 # Set the timestamp for the build in seconds since the epoch
 TIMESTAMP=$(date +%s)
