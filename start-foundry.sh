@@ -1,16 +1,28 @@
 #!/bin/bash
 
-if [ -f ${FOUNDRY_BASE}/dot.env ]; then
-    export $(cat dot.env | grep -v "#" | xargs)
+
+if [ -f dot.env ]; then
+    while IFS= read -r line; do
+        # Skip empty lines
+        if [ -z "$line" ]; then
+            continue
+        fi
+        export "$line"
+    done < <(grep -vE '^#|^$' dot.env)
 fi
 
+
 # Configure rclone
-echo "Configuring rclone..."
-echo "[dbx]" > ${FOUNDRY_BASE}/rclone.conf
-echo "type = dropbox" >> ${FOUNDRY_BASE}/rclone.conf
-echo "token = ${DROPBOX_TOKEN}" >> ${FOUNDRY_BASE}/rclone.conf
-echo "rclone config:"
-cat ${FOUNDRY_BASE}/rclone.conf
+if [ -f ${FOUNDRY_BASE}/rclone.conf ]
+  echo "Existing rclone.conf found"
+else
+  echo "Configuring rclone..."
+  echo "[dbx]" > ${FOUNDRY_BASE}/rclone.conf
+  echo "type = dropbox" >> ${FOUNDRY_BASE}/rclone.conf
+  echo "token = ${DROPBOX_TOKEN}" >> ${FOUNDRY_BASE}/rclone.conf
+  echo "rclone config:"
+  cat ${FOUNDRY_BASE}/rclone.conf
+fi
 
 # Clear backup log if it exists
 if [ -f ${FOUNDRY_VTT_DATA_PATH}/bkp.log ]; then

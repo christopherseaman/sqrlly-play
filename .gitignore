@@ -1,4 +1,6 @@
-dot.env
+*.env
 data
 rclone.conf
 cert
+*.zip
+FoundryVTT*

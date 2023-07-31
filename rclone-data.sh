@@ -1,7 +1,13 @@
 #!/usr/bin/env bash
 
 if [ -f ${FOUNDRY_BASE}/dot.env ]; then
-    export $(cat dot.env | grep -v "#" | xargs)
+    while IFS= read -r line; do
+        # Skip empty lines
+        if [ -z "$line" ]; then
+            continue
+        fi
+        export "$line"
+    done < <(grep -vE '^#|^$' ${FOUNDRY_BASE}/dot.env)
 fi
 
 rclone sync ${FOUNDRY_VTT_DATA_PATH} dbx:/Shares/foundry/data \
