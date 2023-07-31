@@ -1,3 +1,4 @@
 dot.env
 data
 rclone.conf
+cert
