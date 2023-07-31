@@ -1,12 +1,9 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
-echo "Backup started: $(date)" >> ${FOUNDRY_DATA_DIR}/bkp.log
+if [ -f ${FOUNDRY_BASE}/dot.env ]; then
+    export $(cat dot.env | grep -v "#" | xargs)
+fi
 
-# Check for previous backup and abort if running
-pgrep -x rclone && killall -9 rclone
-
-# Run the backup
-# date >> ${FOUNDRY_DATA_DIR}/bkp.log
-rclone sync ${FOUNDRY_DATA_DIR} dbx:/Shares/foundry/data --config=/home/foundry/rclone.conf
-
-echo "Backup finished: $(date)" >> ${FOUNDRY_DATA_DIR}/bkp.log
+rclone sync ${FOUNDRY_VTT_DATA_PATH} dbx:/Shares/foundry/data \
+        --config=${FOUNDRY_BASE}/rclone.conf \
+        --stats-one-line -v --log-file ${FOUNDRY_VTT_DATA_PATH}/bkp.log
