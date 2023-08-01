@@ -13,6 +13,7 @@ fi
 
 # Configure rclone
 if [ -f ${FOUNDRY_BASE}/rclone.conf ]
+then
   echo "Existing rclone.conf found"
 else
   echo "Configuring rclone..."
