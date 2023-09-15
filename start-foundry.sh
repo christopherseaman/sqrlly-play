@@ -1,6 +1,6 @@
 #!/bin/bash
 
-
+# Load variables from dot.env if exists, otherwise should be set in environment
 if [ -f dot.env ]; then
     while IFS= read -r line; do
         # Skip empty lines
@@ -10,7 +10,6 @@ if [ -f dot.env ]; then
         export "$line"
     done < <(grep -vE '^#|^$' dot.env)
 fi
-
 
 # Configure rclone
 if [ -f ${FOUNDRY_BASE}/rclone.conf ]
@@ -53,16 +52,29 @@ fi
 
 # Local settings for Foundry
 echo "Configuring Foundry..."
-jq '.sslCert = env.FOUNDRY_SSL_CERT |
-     .sslKey = env.FOUNDRY_SSL_KEY  |
-   .dataPath = env.FOUNDRY_VTT_DATA_PATH |
-   .hostname = env.FOUNDRY_HOSTNAME' ${FOUNDRY_VTT_DATA_PATH}/Config/options.jq.json > ${FOUNDRY_VTT_DATA_PATH}/Config/options.json
+if [ -z "${FOUNDRY_SSL_CERT}" ]
+then
+  echo "No SSL cert specified, skipping HTTPS"
+else
+  echo "SSL cert specified, setting up HTTPS"
+  jq '.sslCert = env.FOUNDRY_SSL_CERT |
+      .sslKey = env.FOUNDRY_SSL_KEY  |
+    .dataPath = env.FOUNDRY_VTT_DATA_PATH |
+    .hostname = env.FOUNDRY_HOSTNAME' ${FOUNDRY_VTT_DATA_PATH}/Config/options.jq.json > ${FOUNDRY_VTT_DATA_PATH}/Config/options.json
+fi
 
 # Start Foundry & backup
 echo "Starting Foundry and rclone ..."
 pm2 start ${FOUNDRY_MAIN} --name "sqrlly-play"
 
-pm2 start ${FOUNDRY_BASE}/rclone-data.sh -c "${CRONFREQ}" --no-autorestart --name sqrlly-backup
+# If NO_BACKUP is set, then skip starting the backup cron
+if [ -z "${NO_BACKUP}" ]
+then
+  echo "Starting backup cron..."
+  pm2 start ${FOUNDRY_BASE}/rclone-data.sh -c "${CRONFREQ}" --no-autorestart --name sqrlly-backup
+else
+  echo "Skipping backup cron... NO_BACKUP=${NO_BACKUP}"
+fi
 
 # Debug
 # pm2 logs
