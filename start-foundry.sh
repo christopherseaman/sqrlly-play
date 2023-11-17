@@ -1,15 +1,15 @@
 #!/bin/bash
 
-# Load variables from dot.env if exists, otherwise should be set in environment
-if [ -f dot.env ]; then
-    while IFS= read -r line; do
-        # Skip empty lines
-        if [ -z "$line" ]; then
-            continue
-        fi
-        export "$line"
-    done < <(grep -vE '^#|^$' dot.env)
-fi
+# Define load_env()
+load_env () {
+    set -o allexport
+    source $1
+    set +o allexport
+} 
+
+# Load variables from first arg, else dot.env if exists
+DOTFILE=${1:-dot.env}
+load_env ${DOTFILE}
 
 # Configure rclone
 if [ -f ${FOUNDRY_BASE}/rclone.conf ]
