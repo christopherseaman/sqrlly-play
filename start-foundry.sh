@@ -11,10 +11,36 @@ load_env () {
 DOTFILE=${1:-dot.env}
 load_env ${DOTFILE}
 
+# Check for dependencies: rclone, jq, pm2
+MISSING_DEPS=0
+if ! command -v rclone &> /dev/null
+then
+    echo "rclone could not be found, please install it and try again"
+    MISSING_DEPS=1
+fi
+if ! command -v jq &> /dev/null
+then
+    echo "jq could not be found, please install it and try again"
+    MISSING_DEPS=1
+fi
+if ! command -v pm2 &> /dev/null
+then
+    echo "pm2 could not be found, please install it and try again"
+    MISSING_DEPS=1
+fi
+if [ $MISSING_DEPS -eq 1 ]
+then
+    exit 1
+fi
+
 # Configure rclone
 if [ -f ${FOUNDRY_BASE}/rclone.conf ]
 then
   echo "Existing rclone.conf found"
+elif [ -z "${DROPBOX_TOKEN}" ]
+then
+  echo "No Dropbox token specified or existing rclone.conf found, aborting."
+  exit 1
 else
   echo "Configuring rclone..."
   echo "[dbx]" > ${FOUNDRY_BASE}/rclone.conf
@@ -32,17 +58,6 @@ else
   unzip -q ${FOUNDRY_BASE}/data.zip -d ${FOUNDRY_BASE}
   rm ${FOUNDRY_BASE}/data.zip
 fi
-if rclone sync dbx:/Shares/foundry/data ${FOUNDRY_VTT_DATA_PATH} \
-          --config=${FOUNDRY_BASE}/rclone.conf \
-          --stats-one-line -v --log-file ${FOUNDRY_VTT_DATA_PATH}/bkp.log
-then
-  echo "Data snapshot fetched successfully."
-else
-  cat ${FOUNDRY_BASE}/rclone.conf
-  echo "Environment:"
-  env
-  exit 1
-fi
 
 # Clear backup log if it exists
 if [ -f ${FOUNDRY_VTT_DATA_PATH}/bkp.log ]; then
@@ -54,7 +69,7 @@ fi
 echo "Configuring Foundry..."
 if [ -z "${FOUNDRY_SSL_CERT}" ]
 then
-  echo "No SSL cert specified, skipping HTTPS"
+  echo "No SSL cert specified in env, skipping HTTPS"
 else
   echo "SSL cert specified, setting up HTTPS"
   jq '.sslCert = env.FOUNDRY_SSL_CERT |
