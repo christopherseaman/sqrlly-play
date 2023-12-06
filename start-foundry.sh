@@ -8,8 +8,7 @@ load_env () {
 } 
 
 # Load variables from first arg, else dot.env if exists
-DOTFILE=${1:-dot.env}
-load_env ${DOTFILE}
+load_env dot.env
 
 # Check for dependencies: rclone, jq, pm2
 MISSING_DEPS=0
