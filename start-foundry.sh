@@ -65,17 +65,17 @@ if [ -f ${FOUNDRY_VTT_DATA_PATH}/bkp.log ]; then
 fi
 
 # Local settings for Foundry
-echo "Configuring Foundry..."
-if [ -z "${FOUNDRY_SSL_CERT}" ]
-then
-  echo "No SSL cert specified in env, skipping HTTPS"
-else
-  echo "SSL cert specified, setting up HTTPS"
-  jq '.sslCert = env.FOUNDRY_SSL_CERT |
-      .sslKey = env.FOUNDRY_SSL_KEY  |
-    .dataPath = env.FOUNDRY_VTT_DATA_PATH |
-    .hostname = env.FOUNDRY_HOSTNAME' ${FOUNDRY_VTT_DATA_PATH}/Config/options.jq.json > ${FOUNDRY_VTT_DATA_PATH}/Config/options.json
-fi
+# echo "Configuring Foundry..."
+# if [ -z "${FOUNDRY_SSL_CERT}" ]
+# then
+#   echo "No SSL cert specified in env, skipping HTTPS"
+# else
+#   echo "SSL cert specified, setting up HTTPS"
+#   jq '.sslCert = env.FOUNDRY_SSL_CERT |
+#       .sslKey = env.FOUNDRY_SSL_KEY  |
+#     .dataPath = env.FOUNDRY_VTT_DATA_PATH |
+#     .hostname = env.FOUNDRY_HOSTNAME' ${FOUNDRY_VTT_DATA_PATH}/Config/options.jq.json > ${FOUNDRY_VTT_DATA_PATH}/Config/options.json
+# fi
 
 # Start Foundry & backup
 echo "Starting Foundry and rclone ..."
