@@ -11,8 +11,8 @@ load_env () {
 DOTFILE=${1:-dot.env}
 load_env ${DOTFILE}
 REMOTE="dbx:/Shares/foundry/data"
-OPTIONS="--config=${FOUNDRY_BASE}/rclone.conf -v --stats-one-line --log-file ${FOUNDRY_VTT_DATA_PATH}/bkp.log"
-EXCLUDE="--exclude=*.log --exclude=*.lock"
+OPTIONS="--config=${FOUNDRY_BASE}/rclone.conf --checksum -v --stats-one-line --log-file ${FOUNDRY_VTT_DATA_PATH}/bkp.log"
+EXCLUDE="--exclude=*.log --exclude=*.lock --exclude=.DS_Store"
 
 # Log start of backup
 echo "$(date +'%Y/%m/%d %H:%M:%S') META  : Starting backup of ${FOUNDRY_VTT_DATA_PATH}" >> ${FOUNDRY_VTT_DATA_PATH}/bkp.log
